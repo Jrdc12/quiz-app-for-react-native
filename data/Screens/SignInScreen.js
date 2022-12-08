@@ -3,15 +3,34 @@ import { useState } from "react";
 import { COLORS, SIZES } from "../theme";
 import FormInput from "../components/shared/FormInput";
 import FormButton from "../components/shared/FormButton";
-import { signIn } from "../utils/auth";
+import { auth } from "../../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { ToastAndroid } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const SignInScreen = ({navigation}) => {
+const SignInScreen = ({ navigation }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
+
 	const handleOnSubmit = () => {
-		if(email != '' && password != '') {
-			signIn(email, password)
+		if (email != "" && password != "") {
+			//Sign in
+			signInWithEmailAndPassword(auth, email, password)
+				.then((userCredential) => {
+					// Signed in
+					const user = userCredential.user;
+					//Navigate to Quiz
+					navigation.navigate("Quiz");
+					// ...
+				}
+				)
+				.catch((error) => {
+					const errorCode = error.code;
+					const errorMessage = error.message;
+					ToastAndroid.show(errorMessage, ToastAndroid.SHORT);
+				}
+				);
 		}
 	};
 
@@ -63,11 +82,18 @@ const SignInScreen = ({navigation}) => {
 			/>
 
 			{/* Footer */}
-			<View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
-				<Text style={{fontSize: 16, color: COLORS.black}}>Don't have an account?</Text>
-				<Text style={{fontSize: 16, color: "#2e5984", marginLeft: 5}}
-					onPress={() => navigation.navigate('SignUpScreen')}
-				>Sign Up</Text>
+			<View
+				style={{ flexDirection: "row", alignItems: "center", marginTop: 20 }}
+			>
+				<Text style={{ fontSize: 16, color: COLORS.black }}>
+					Don't have an account?
+				</Text>
+				<Text
+					style={{ fontSize: 16, color: "#2e5984", marginLeft: 5 }}
+					onPress={() => navigation.navigate("SignUpScreen")}
+				>
+					Sign Up
+				</Text>
 			</View>
 		</SafeAreaView>
 	);

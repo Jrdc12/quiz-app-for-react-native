@@ -3,7 +3,11 @@ import { useState } from "react";
 import { COLORS } from "../theme";
 import FormInput from "../components/shared/FormInput";
 import FormButton from "../components/shared/FormButton";
-import { signUp } from "../utils/auth";
+import { auth } from "../../firebase";
+import {createUserWithEmailAndPassword} from 'firebase/auth'
+import { ToastAndroid } from "react-native";
+
+
 
 const SignUpScreen = ({ navigation }) => {
 	const [email, setEmail] = useState("");
@@ -13,8 +17,21 @@ const SignUpScreen = ({ navigation }) => {
 	const handleOnSubmit = () => {
 		if (email != "" && password != "" && confirmPassword != "") {
 			if (password == confirmPassword) {
-				// signup
-				signUp(email, password)
+				//signup
+				createUserWithEmailAndPassword(auth, email, password)
+					.then((userCredential) => {
+						// Signed in
+						const user = userCredential.user;
+						ToastAndroid.show('User created successfully', ToastAndroid.SHORT)
+
+						// ...
+					})
+					.catch((error) => {
+						const errorCode = error.code;
+						const errorMessage = error.message;
+						// ..
+					});
+				
 			} else {
 				Alert.alert("Password does not match");
 			}

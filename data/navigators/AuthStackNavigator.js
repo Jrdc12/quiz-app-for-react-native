@@ -1,5 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { SignInScreen, SignUpScreen } from '../Screens';
+import { SignInScreen, SignUpScreen, Quizz } from '../Screens';
 
 const Stack = createStackNavigator();
 
@@ -11,6 +11,7 @@ const AuthStackNavigator = () => {
       {/* <Stack.Screen name="HomeScreen" component={HomeScreen} /> */}
       <Stack.Screen name="SignInScreen" component={SignInScreen} />
       <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+      <Stack.Screen name="Quiz" component={Quizz} />
     </Stack.Navigator>
   );
 }
